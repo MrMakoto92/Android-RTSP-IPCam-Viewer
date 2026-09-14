@@ -16,6 +16,8 @@ public class NvrGridAdapter extends RecyclerView.Adapter<NvrGridAdapter.ViewHold
     private final Context context;
     private final List<String> cameraTitles;
     private OnItemClickListener listener;
+    private int columns = 2;
+    private int parentHeight = 0;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -25,6 +27,12 @@ public class NvrGridAdapter extends RecyclerView.Adapter<NvrGridAdapter.ViewHold
         this.context = context;
         this.cameraTitles = cameraTitles;
         this.listener = listener;
+    }
+
+    public void setGridConfig(int columns, int parentHeight) {
+        this.columns = columns;
+        this.parentHeight = parentHeight;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -39,7 +47,13 @@ public class NvrGridAdapter extends RecyclerView.Adapter<NvrGridAdapter.ViewHold
         String title = cameraTitles.get(position);
         holder.txtTitle.setText(title);
 
-        // Hace que la casilla sea seleccionable con las flechas del D-Pad
+        // Recalcular altura de la celda de manera proporcional
+        if (parentHeight > 0 && columns > 0) {
+            ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
+            params.height = parentHeight / columns;
+            holder.itemView.setLayoutParams(params);
+        }
+
         holder.itemView.setFocusable(true);
         holder.itemView.setClickable(true);
 
