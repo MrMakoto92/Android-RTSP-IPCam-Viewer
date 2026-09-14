@@ -28,10 +28,10 @@ jobs:
       - name: Compilar APK Debug
         run: |
           cd android-studio-project
-          ./gradlew assembleDebug
+          ./gradlew :RTSP-IPCam-Viewer:assembleDebug --rerun-tasks
 
       - name: Subir archivo APK resultante
         uses: actions/upload-artifact@v4
         with:
           name: app-debug.apk
-          path: android-studio-project/app/build/outputs/apk/debug/*.apk
+          path: android-studio-project/**/build/outputs/apk/**/*.apk
