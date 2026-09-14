@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0F141C">
+
+    <!-- Barra de Herramientas Superior (Top Action Bar NVR Next) -->
+    <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentTop="true"
+        android:background="#18202C"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="NVR Logo"
+            android:src="@android:drawable/ic_menu_camera"
+            app:tint="#00E5FF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="NVR NEXT | MONITOR"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Espaciador Flexible -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Selector de Cuadrícula (1x1, 2x2, 3x3, 4x4) para D-Pad -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_grid_1"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                android:background="@drawable/tv_item_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="1x1"
+                android:textColor="#00E5FF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_grid_4"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/tv_item_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="2x2"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_grid_9"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/tv_item_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="3x3"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_grid_16"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/tv_item_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="4x4"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Botón de Escaneo ONVIF -->
+        <Button
+            android:id="@+id/btn_onvif_scan"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/tv_item_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="ESCANEAR ONVIF"
+            android:textColor="#00E5FF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Sidebar Lateral de Accesos Rápidos (D-Pad Navigation) -->
+    <LinearLayout
+        android:id="@+id/sidebar"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_bar"
+        android:layout_alignParentStart="true"
+        android:background="#121822"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="12dp">
+
+        <ImageButton
+            android:id="@+id/btn_nav_cameras"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/tv_item_selector"
+            android:clickable="true"
+            android:contentDescription="Cámaras"
+            android:focusable="true"
+            android:src="@android:drawable/ic_menu_camera"
+            app:tint="#00E5FF" />
+
+        <ImageButton
+            android:id="@+id/btn_nav_add_nvr"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/tv_item_selector"
+            android:clickable="true"
+            android:contentDescription="Agregar NVR"
+            android:focusable="true"
+            android:src="@android:drawable/ic_input_add"
+            app:tint="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/btn_nav_settings"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/tv_item_selector"
+            android:clickable="true"
+            android:contentDescription="Ajustes"
+            android:focusable="true"
+            android:src="@android:drawable/ic_menu_preferences"
+            app:tint="#FFFFFF" />
+    </LinearLayout>
+
+    <!-- ÁREA PRINCIPAL: Rejilla de Vídeo (RecyclerView para la Rejilla de Cámaras) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/camera_grid_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_bar"
+        android:layout_toEndOf="@id/sidebar"
+        android:clipToPadding="false"
+        android:padding="4dp" />
+
+</RelativeLayout>
