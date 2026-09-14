@@ -4,7 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.github.warren_bank.rtsp_ipcam_viewer">
 
+    <!-- Permiso de Red -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Declaración para Android TV y Control Remoto (Sin pantalla táctil) -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
 
     <application
         android:label="@string/app_name"
@@ -26,6 +35,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Permite que la app aparezca en la interfaz de Android TV -->
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
 
