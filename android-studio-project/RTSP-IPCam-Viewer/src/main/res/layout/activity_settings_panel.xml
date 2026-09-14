@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0F141C"
+    android:orientation="horizontal">
+
+    <!-- Menú Categorías Izquierda -->
+    <LinearLayout
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:background="#121822"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/panel_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ajustes Orion"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:id="@+id/btn_section_add"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/tv_item_selector"
+            android:gravity="start|center_vertical"
+            android:paddingStart="12dp"
+            android:text="Añadir Cámaras / ONVIF"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_section_engine"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/tv_item_selector"
+            android:gravity="start|center_vertical"
+            android:paddingStart="12dp"
+            android:text="Motor Multimedia"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_panel_back"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="auto"
+            android:background="@drawable/tv_item_selector"
+            android:gravity="start|center_vertical"
+            android:paddingStart="12dp"
+            android:text="Volver al Grid"
+            android:textColor="#00E5FF"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="#1E2836" />
+
+    <!-- Contenido Detallado Derecha -->
+    <FrameLayout
+        android:id="@+id/panel_content_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp">
+
+        <!-- VISTA AÑADIR CÁMARA / ESCANEO -->
+        <LinearLayout
+            android:id="@+id/view_add_cameras"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dispositivos Detectados ONVIF"
+                android:textColor="#00E5FF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_start_onvif_scan"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="220dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/tv_item_selector"
+                android:text="Escanear Red ONVIF"
+                android:textColor="#FFFFFF" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_onvif_results"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="12dp"
+                android:background="#0A0D12" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Entrada Manual RTSP"
+                android:textColor="#A0AAB8"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/input_manual_rtsp"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:background="#121822"
+                    android:hint="rtsp://192.168.1.50:554/live"
+                    android:padding="10dp"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#405060" />
+
+                <Button
+                    android:id="@+id/btn_add_manual"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="120dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/tv_item_selector"
+                    android:text="Añadir"
+                    android:textColor="#00E5FF" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- VISTA MOTOR REPRODUCTOR -->
+        <LinearLayout
+            android:id="@+id/view_engine_settings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Motor de Reproducción RTSP"
+                android:textColor="#00E5FF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Selecciona el decodificador de vídeo para los streams"
+                android:textColor="#8090A0"
+                android:textSize="12sp" />
+
+            <RadioGroup
+                android:id="@+id/radio_group_engines"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+                <RadioButton
+                    android:id="@+id/engine_exoplayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:checked="true"
+                    android:text="ExoPlayer (Android Native / Recomendado)"
+                    android:textColor="#FFFFFF" />
+
+                <RadioButton
+                    android:id="@+id/engine_libvlc"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="LibVLC (Compatibilidad H.264/H.265)"
+                    android:textColor="#FFFFFF" />
+
+                <RadioButton
+                    android:id="@+id/engine_ffmpeg"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="FFmpeg Native (Baja latencia)"
+                    android:textColor="#FFFFFF" />
+            </RadioGroup>
+        </LinearLayout>
+
+    </FrameLayout>
+</LinearLayout>
