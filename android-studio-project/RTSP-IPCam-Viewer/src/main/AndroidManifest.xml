@@ -33,6 +33,13 @@
             </intent-filter>
         </activity>
 
+        <!-- Actividad de Ajustes y Gestión de Cámaras / Motor -->
+        <activity
+            android:name=".grid_view.activities.SettingsActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
     </application>
 
 </manifest>
