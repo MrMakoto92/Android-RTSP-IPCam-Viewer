@@ -1,8 +1,13 @@
 package com.github.warren_bank.rtsp_ipcam_viewer.grid_view.activities;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -19,6 +24,7 @@ public class NvrGridActivity extends AppCompatActivity {
     private NvrGridAdapter adapter;
     private List<String> cameraList;
     private GridLayoutManager layoutManager;
+    private int currentColumns = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +33,12 @@ public class NvrGridActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.camera_grid_recycler);
 
-        // Lista de demostración inicial
         cameraList = new ArrayList<>();
         for (int i = 1; i <= 16; i++) {
-            cameraList.add("CH " + String.format("%02d", i) + " - ESPERANDO ONVIF");
+            cameraList.add("CH " + String.format("%02d", i) + " - CANAL");
         }
 
-        layoutManager = new GridLayoutManager(this, 2);
+        layoutManager = new GridLayoutManager(this, currentColumns);
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new NvrGridAdapter(this, cameraList, position -> {
@@ -41,57 +46,95 @@ public class NvrGridActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapter);
 
-        setupGridButtons();
+        // Recalcular tamaño exacto cuando el RecyclerView termine de renderizarse
+        recyclerView.post(() -> updateGridDimensions(currentColumns));
+
+        setupUIButtons();
     }
 
-    private void setupGridButtons() {
-        Button btn1 = findViewById(R.id.btn_grid_1);
-        Button btn4 = findViewById(R.id.btn_grid_4);
-        Button btn9 = findViewById(R.id.btn_grid_9);
-        Button btn16 = findViewById(R.id.btn_grid_16);
-        Button btnOnvif = findViewById(R.id.btn_onvif_scan);
+    private void setupUIButtons() {
+        ImageButton btnGridDialog = findViewById(R.id.btn_open_grid_dialog);
+        ImageButton btnAddCam = findViewById(R.id.btn_nav_add_nvr);
 
-        if (btn1 != null) btn1.setOnClickListener(v -> setGridColumns(1));
-        if (btn4 != null) btn4.setOnClickListener(v -> setGridColumns(2));
-        if (btn9 != null) btn9.setOnClickListener(v -> setGridColumns(3));
-        if (btn16 != null) btn16.setOnClickListener(v -> setGridColumns(4));
+        if (btnGridDialog != null) {
+            btnGridDialog.setOnClickListener(v -> showGridSelectionDialog());
+        }
 
-        if (btnOnvif != null) {
-            btnOnvif.setOnClickListener(v -> executeOnvifScan());
+        if (btnAddCam != null) {
+            btnAddCam.setOnClickListener(v -> showAddCameraDialog());
         }
     }
 
+    private void showGridSelectionDialog() {
+        String[] options = {"Rejilla 1x1", "Rejilla 2x2", "Rejilla 3x3", "Rejilla 4x4"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccionar Rejilla");
+        builder.setItems(options, (dialog, which) -> {
+            currentColumns = which + 1;
+            updateGridDimensions(currentColumns);
+        });
+        builder.show();
+    }
+
+    private void updateGridDimensions(int columns) {
+        if (layoutManager != null && recyclerView != null) {
+            layoutManager.setSpanCount(columns);
+            int availableHeight = recyclerView.getHeight() - recyclerView.getPaddingTop() - recyclerView.getPaddingBottom();
+            adapter.setGridConfig(columns, availableHeight);
+        }
+    }
+
+    private void showAddCameraDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_add_camera, null);
+        builder.setView(view);
+
+        AlertDialog dialog = builder.create();
+
+        Button btnScan = view.findViewById(R.id.btn_dialog_onvif_search);
+        Button btnSave = view.findViewById(R.id.btn_save_camera);
+        EditText inputUrl = view.findViewById(R.id.input_stream_url);
+
+        btnScan.setOnClickListener(v -> {
+            dialog.dismiss();
+            executeOnvifScan();
+        });
+
+        btnSave.setOnClickListener(v -> {
+            String url = inputUrl.getText().toString().trim();
+            if (!url.isEmpty()) {
+                cameraList.add(0, "MANUAL - " + url);
+                adapter.notifyDataSetChanged();
+                Toast.makeText(this, "Cámara agregada", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
     private void executeOnvifScan() {
-        Toast.makeText(this, "Escaneando red local en busca de cámaras ONVIF...", Toast.LENGTH_SHORT).show();
-        
+        Toast.makeText(this, "Escaneando dispositivos ONVIF...", Toast.LENGTH_SHORT).show();
         OnvifDiscovery.discoverDevices(this, new OnvifDiscovery.DiscoveryCallback() {
             @Override
             public void onDevicesFound(List<String> deviceIps) {
-                if (deviceIps.isEmpty()) {
-                    Toast.makeText(NvrGridActivity.this, "No se encontraron dispositivos ONVIF en la red.", Toast.LENGTH_LONG).show();
-                } else {
+                if (!deviceIps.isEmpty()) {
                     cameraList.clear();
-                    for (int i = 0; i < deviceIps.size(); i++) {
-                        cameraList.add("ONVIF CAM - " + deviceIps.get(i));
+                    for (String ip : deviceIps) {
+                        cameraList.add("ONVIF CAM - " + ip);
                     }
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(NvrGridActivity.this, "¡Se encontraron " + deviceIps.size() + " cámaras ONVIF!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(NvrGridActivity.this, "Se encontraron " + deviceIps.size() + " cámaras", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(NvrGridActivity.this, "No se encontraron cámaras ONVIF", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onError(String errorMsg) {
-                Toast.makeText(NvrGridActivity.this, "Error en escaneo ONVIF: " + errorMsg, Toast.LENGTH_LONG).show();
+                Toast.makeText(NvrGridActivity.this, "Error: " + errorMsg, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void setGridColumns(int columns) {
-        if (layoutManager != null) {
-            layoutManager.setSpanCount(columns);
-            adapter.notifyDataSetChanged();
-            Toast.makeText(this, "Modo de Rejilla: " + columns + "x" + columns, Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
