@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
 
-        <!-- Actividad Principal NVR Next -->
+        <!-- Actividad Principal Grid -->
         <activity
             android:name=".grid_view.activities.NvrGridActivity"
             android:exported="true"
@@ -33,7 +33,14 @@
             </intent-filter>
         </activity>
 
-        <!-- Actividad de Ajustes y Gestión de Cámaras / Motor -->
+        <!-- Pantalla Exclusiva para Agregar Cámaras RTSP/ONVIF -->
+        <activity
+            android:name=".grid_view.activities.AddCameraActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <!-- Pantalla Exclusiva para Ajustes de Motor Multimedia -->
         <activity
             android:name=".grid_view.activities.SettingsActivity"
             android:exported="false"
